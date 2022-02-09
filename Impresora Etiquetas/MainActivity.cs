@@ -79,18 +79,14 @@ namespace Impresora_Etiquetas
 
                 foreach (var device in pairedDevices)
                 {
-                    Toast.MakeText(this, "Impresora" + device.Name + "\n" + device.Address, ToastLength.Short).Show();
+                    Toast.MakeText(this, "Impresora - " + device.Name + "\n" + device.Address, ToastLength.Short).Show();
                     macAdress = device.Address;
                     nombreImpresora = device.Name;
 
 
 
-
-                    // this.progressBar.SetMessage("Validando dispositivo");
-
                     try
                     {
-                        //this.progressBar.Show();
                         await Task.Delay(100);
                         BluetoothSocket mySocket;
                         await Task.Delay(100);
@@ -117,11 +113,6 @@ namespace Impresora_Etiquetas
                         btnImpresion.Enabled = true;
                         return;
                     }
-                    //finally
-                    //{
-                    //    progressBar.Dismiss();
-                    //}
-
                 }
             }
             else
@@ -140,7 +131,7 @@ namespace Impresora_Etiquetas
         private async Task Impresion(string macAdress)
         {
 
-            int longitud = 1200;;
+            int longitud = 1200;
             int distancia = 0;
             string codigoQR = "SOLUCIONES MOVILES INTEGRALES - ICONN";
             string codigoBarras1 = "ICCON";
@@ -155,11 +146,16 @@ namespace Impresora_Etiquetas
 
             string zplEtiqueta =
 
-                "^FXEncabezado Ticket" 
-                +"^FT" + distancia.ToString() + "," + (longitud-20).ToString() + "^BQN,2,10" 
+                "^FX LAS SIGUIENTES DOS LINEAS IMPRIMEN UN CODIGO QR, MODIFICA TAMAÑO CON ULTIMO DIGITO EJEMPLO : BQN,2,10 <--MODIFICAR EL 10"
+                  + "^FT" + distancia.ToString() + "," + (longitud-20).ToString() + "^BQN,2,10" 
                 +"^FH\\^FDLA," + codigoQR.ToString() + "^FS"
-                +"^BY4,3,95^FT" + distancia.ToString() + "," + (longitud - 363).ToString() + "^BCB,,N,N"
+
+                + "^FX LAS SIGUIENTES DOS LINEAS IMPRIMEN UN CODIGO DE BARRAS, MODIFICA LO ALTO DEL CODIGO EJEMPLO: BY4,3,95 <-- MODIFICA EL 95, " +
+                    "LO ANCHO LO HACE EN AUTOMATICO DEPENDIENDO LOS DATOS QUE SE INGRESEN"
+                + "^BY4,3,95^FT" + distancia.ToString() + "," + (longitud - 363).ToString() + "^BCB,,N,N"
                 + "^FD>:" + codigoBarras1.ToString() + "^FS"
+
+                + "^FX LAS SIGUIENTES LINEAS IMPRIMEN TEXTO, MODIFICA EL TAMAÑO DE LETRA EJEMPLO: A0B,30,28 (30 <-ALTO,28 <-ANCHO)"
                 + "^FT" + (30 + distancia).ToString() + "," + (longitud - 758).ToString() + "^A0B,30,28^FH\\^FDLoc^FS"
                 + "^FT" + (70 + distancia).ToString() + "," + (longitud - 758).ToString() + "^A0B,33,31^FH\\^FD"+ loc.ToString()+"^FS"
                 + "^FT" + (30 + distancia).ToString() + "," + (longitud - 911).ToString() + "^A0B,30,28^FH\\^FDPaq^FS"
@@ -168,10 +164,14 @@ namespace Impresora_Etiquetas
                 + "^FT" + (73 + distancia).ToString() + "," + (longitud - 967).ToString() + "^A0B,30,28^FH\\^FD" + tam.ToString() + "^FS"
                 + "^FT" + (37 + distancia).ToString() + "," + (longitud - 1100).ToString() + "^A0B,37,33^FH\\^FDP^FS"
                 + "^FT" + (37 + distancia).ToString() + "," + (longitud - 1135).ToString() + "^A0B,37,33^FH\\^FD3^FS"
+                + "^FX LINEA RECTA"
                 + "^FO" + (105 + distancia).ToString() + "," + (longitud - 1070).ToString() + "^GB0,725,4^FS"
+                + "^FX TEXTO"
                 + "^FT" + (150 + distancia).ToString() + "," + (longitud - 363).ToString() + "^A0B,41,38^FH\\^FD" + descripcion.ToString() + "^FS"
                 + "^FT" + (133 + distancia).ToString() + "," + (longitud - 1105).ToString() + "^A0B,98,139^FH\\^FD3^FS"
+                + "^FX LINEA RECTA"
                 + "^FO" + (165 + distancia).ToString() + "," + (longitud - 1062).ToString() + "^GB0,725,4^FS"
+                + "^FX TEXTO"
                 + "^FT" + (204 + distancia).ToString() + "," + (longitud - 365).ToString() + "^A0B,37,33^FH\\^FDPedido^FS"
                 + "^FT" + (246 + distancia).ToString() + "," + (longitud - 365).ToString() + "^A0B,37,33^FH\\^FD" + pedido.ToString() + "^FS"
                 + "^FT" + (204 + distancia).ToString() + "," + (longitud - 490).ToString() + "^A0B,37,33^FH\\^FDNo^FS"
@@ -180,9 +180,14 @@ namespace Impresora_Etiquetas
                 + "^FT" + (246 + distancia).ToString() + "," + (longitud - 579).ToString() + "^A0B,37,33^FH\\^FD" + nombre.ToString() + "^FS"
                 + "^FT" + (204 + distancia).ToString() + "," + (longitud - 745).ToString() + "^A0B,33,31^FH\\^FDFecha: ^FS"
                 + "^FT" + (204 + distancia).ToString() + "," + (longitud - 840).ToString() + "^A0B,33,31^FH\\^FD5/1^FS"
+                + "^FX LINEA RECTA"
                 + "^FO" + (253 + distancia).ToString() + "," + (longitud - 1070).ToString() + "^GB0,725,4^FS"
+
+                + "^FX LAS SIGUIENTES DOS LINEAS IMPRIMEN UN CODIGO DE BARRAS"
                 + "^BY4,3,97^FT" + (368 + distancia).ToString() + "," + (longitud - 90).ToString() + "^BCB,,N,N"
                 + "^FD>:" + codigoBarras2.ToString() + "^FS"
+
+                + "^FX TEXTO"
                 + "^FT" + (300 + distancia).ToString() + "," + (longitud - 1080).ToString() + "^A0B,30,28^FH\\^FDCant^FS"
                 + "^FT" + (340 + distancia).ToString() + "," + (longitud - 1080).ToString() + "^A0B,30,28^FH\\^FD001/001^FS";
   
@@ -199,16 +204,16 @@ namespace Impresora_Etiquetas
                 await Task.Delay(500);
                 Zebra.Sdk.Comm.BluetoothConnectionInsecure connec = new Zebra.Sdk.Comm.BluetoothConnectionInsecure(macAdress);
                 await Task.Delay(500);
-                //SetPrintLanguage(macAdress);
                 await Task.Delay(500);
                 connec.Open();
                 byte[] respuesta = connec.SendAndWaitForResponse(Encoding.ASCII.GetBytes(setLanguageZpl), 500, 500, "");
                 string s = Encoding.ASCII.GetString(respuesta);
                 await Task.Delay(500);
-                //connec.Write(Encoding.ASCII.GetBytes(zpl));
-                //await Task.Delay(5000);
+                
+                //ENVIA CODIGO ZPL A IMPRIMIR
                 connec.Write(Encoding.ASCII.GetBytes(zpl));
                 await Task.Delay(1000);
+
                 byte[] respuesta2 = connec.SendAndWaitForResponse(Encoding.ASCII.GetBytes(setLanguageCPCL), 500, 500, "");
                 string s2 = Encoding.ASCII.GetString(respuesta2);
                 await Task.Delay(1000);
